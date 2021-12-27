@@ -26,7 +26,34 @@ A route configuration consists of an array of route objects.
 
 :::tip
 You can generate such an array of route objects from JSX with `<Route>` elements using `makeRouteConfig`, as shown previously in basic-usage section(todo link)
+:::
 
+
+By default, `<Route />` components receive the following additional props describing the current routing state:
+
+- `match: Match`: an object with router state properties, conforming to the `matchShape` prop type validator
+```ts
+interface Match {
+  location: LocationDescriptor; // The current [location object](https://github.com/4Catalyzer/farce#locations-and-location-descriptors)
+  params: Params; // The union of path parameters for all matched routes
+  routes: RouteObject[]; // An array of all matched route objects
+  route: RouteObject; // The route object corresponding to this component
+  routeParams: Params[]; // The path parameters for `route`
+}
+```
+- `router: Router`: an object with static router properties, conforming to the `routerShape` prop type validator
+```ts
+interface Router {
+  push: (location: LocationDescriptor) => void; // Navigates to a new location
+  replace: (location: LocationDescriptor) => void; // Replaces the existing history entry
+  go: (delta: number) => void; // Moves `delta` steps in the history stack
+  isActive: (match: Match, location: LocationDescriptor, { exact: boolean }) => boolean; // For `match` as above, returns whether `match` corresponds to `location` or a subpath of `location`; if `exact` is set, returns whether `match` corresponds exactly to `location`
+  format: (pattern: string, params: ParamsDescriptor) => string;
+  addNavigationListener(listener: (location: LocationDescriptor) => any, { beforeUnload: boolean }); // Adds a [navigation listener](https://github.com/4Catalyzer/farce#navigation-listeners) that can [block navigation](#blocking-navigation)
+}
+```
+:::tip
+The `getComponent` method receives an object containing the same properties as the `match` object above, with an additional `router` property as above.
 :::
 
 #### `path`
@@ -52,80 +79,6 @@ Routes are matched based on their `path` properties in a depth-first manner, whe
 
 Define the component for a route using either a `Component` field or a `getComponent` method. `Component` should be a component class or function. `getComponent` should be a function that returns a component class or function, or a promise that resolves to either of those. Routes that specify neither will still match if applicable, but will not have a component associated with them.
 
-Given the following route configuration:
-
-```tsx
-const routes = makeRouteConfig(
-  <Route path="/" Component={AppPage}>
-    <Route Component={MainPage}>
-      <Route Component={MainSection} />
-      <Route path="other" Component={OtherSection} />
-    </Route>
-    <Route path="widgets">
-      <Route Component={WidgetsPage} />
-      <Route path=":widgetId" Component={WidgetPage} />
-    </Route>
-  </Route>,
-);
-```
-
-The router will have routes as follows:
-
-- `/`, rendering:
-
-```tsx
-<AppPage>
-  <MainPage>
-    <MainSection />
-  </MainPage>
-</AppPage>
-```
-
-- `/other`, rendering:
-
-```tsx
-<AppPage>
-  <MainPage>
-    <OtherSection />
-  </MainPage>
-</AppPage>
-```
-
-- `/widgets`, rendering:
-
-```tsx
-<AppPage>
-  <WidgetsPage />
-</AppPage>
-```
-
-- `/widgets/${widgetId}` (e.g. `/widgets/foo`), rendering:
-
-```tsx
-<AppPage>
-  <WidgetPage />
-</AppPage>
-```
-
-By default, route components receive the following additional props describing the current routing state:
-
-- `match`: an object with router state properties, conforming to the `matchShape` prop type validator
-  - `location`: the current [location object](https://github.com/4Catalyzer/farce#locations-and-location-descriptors)
-  - `params`: the union of path parameters for all matched routes
-  - `routes`: an array of all matched route objects
-  - `route`: the route object corresponding to this component
-  - `routeParams`: the path parameters for `route`
-- `router`: an object with static router properties, conforming to the `routerShape` prop type validator
-  - `push(location: LocationDescriptor)`: navigates to a new location
-  - `replace(location: LocationDescriptor)`: replaces the existing history entry
-  - `go(delta)`: moves `delta` steps in the history stack
-  - `isActive(match: Match, location: LocationDescriptor, { exact: boolean })`: for `match` as above, returns whether `match` corresponds to `location` or a subpath of `location`; if `exact` is set, returns whether `match` corresponds exactly to `location`
-  - `matcher`: an object implementing the matching algorithm
-    - `format(pattern: string, params: Params)`: returns the path string for a pattern of the same format as a route `path` and a object of the corresponding path parameters
-  - `addNavigationListener(listener: (location: LocationDescriptor) => any, { beforeUnload: boolean })`: adds a [navigation listener](https://github.com/4Catalyzer/farce#navigation-listeners) that can [block navigation](#blocking-navigation)
-
-The `getComponent` method receives an object containing the same properties as the `match` object above, with an additional `router` property as above.
-
 #### `data` or `getData`
 
 Specify the `data` property or `getData` method to inject data into a route component as the `data` prop. `data` can be any value. `getData` can be any value, or a promise that resolves to any value. `getData` receives an object containing the routing state, as described above for `getComponent`.
@@ -146,9 +99,7 @@ const route = {
 ```
 
 :::caution
-
-It does not make sense to specify `data` or `getData` if the route does not have a component as above or a `render` method as below.
-
+It does not make sense to specify `data` or `getData` if the route does not have a component as above or a `render` method.
 :::
 
 
@@ -164,6 +115,53 @@ By default, Found will issue all data fetching operations in parallel. However, 
 Setting `defer` on a route will make the resolver defer calling its `getData` method and the `getData` methods on all of its descendants until all of its parent data promises have resolved.
 
 
-:::tip
+:::caution
 This should be a relatively rare scenario, as generally user experience is better if all data are fetched in parallel, but in some cases it can be desirable to avoid making data fetching operations that are guaranteed to fail, such as when the user is not authenticated, when optimizing for client bandwidth usage or API utilization.
 :::
+
+#### `render`
+
+Specify the `render` method to further customize how the route renders. It receives an object with the following properties:
+
+It should return:
+
+- another function that receives its children as an argument and returns a React element; this function receives
+  - a React element when not using named child routes
+  - an object when using named child routes
+  - `null` when it has no children
+- a React element to render that element
+- `undefined` if it has a pending asynchronous component or data dependency and is not ready to render
+- `null` to render its children (or nothing if there are no children)
+
+Note that, when specifying this `render` method, `Component` or `getComponent` will have no effect other than controlling the value of the `Component` property on the argument to `render`. Additionally, the behavior is different between returning a function that returns `null` and returning `null` directly; in the former case, nothing will be rendered, while in the latter case, the route's children will be rendered.
+
+```ts
+interface RenderProps {
+  match: Match; // The routing state object, as above
+  Component: React.ComponentType<any>; // The component for the route, if any; `null` if the component has not yet been loaded
+  props: Match & {data: any | null}; // `The default props for the route component, specifically `match` with `data` as an additional property; `null` if `data` have not yet been loaded
+  data: any; // The data for the route, as above; `null` if the data have not yet been loaded
+}
+
+render: (e: RenderProps) => React.ComponentType<any> | (children) => React.ComponentType<any> | null | undefined;
+```
+:::tip
+You can use this method to render per-route loading state.
+
+```tsx
+function loadingRender({ Component, props }) {
+  if (!Component || !props) {
+    return <LoadingIndicator />;
+  }
+
+  return <Component {...props} />;
+}
+
+<Route render={loadingRender} {...rest}/>
+```
+:::
+
+If any matched routes have unresolved asynchronous component or data dependencies, the router will initially attempt to render all such routes in their loading state. If those routes all implement `render` methods and return non-`undefined` values from their `render` methods, the router will render the matched routes in their loading states. Otherwise, the router will continue to render the previous set of routes until all asynchronous dependencies resolve.
+
+
+

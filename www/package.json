@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@docusaurus/core": "2.0.0-beta.13",
-    "@docusaurus/preset-classic": "2.0.0-beta.13",
+    "@4c/docusaurus-preset": "0.4.0",
     "@docusaurus/theme-live-codeblock": "^2.0.0-beta.13",
     "clsx": "^1.1.1",
     "found": "^1.0.1",

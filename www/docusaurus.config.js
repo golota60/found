@@ -19,7 +19,7 @@ const config = {
   presets: [
     [
       'classic',
-      /** @type {import('@docusaurus/preset-classic').Options} */
+      /** @type {import('@4c/docusaurus-preset').Options} */
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
@@ -35,7 +35,7 @@ const config = {
   ],
 
   themeConfig:
-    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
+    /** @type {import('@4c/docusaurus-preset').ThemeConfig} */
     ({
       navbar: {
         title: 'Found',
