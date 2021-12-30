@@ -1,5 +1,5 @@
 ---
-sidebar_position: 1
+sidebar_position: 10
 ---
 
 # Examples and extensions
@@ -15,10 +15,12 @@ sidebar_position: 1
 - [Server-side rendering](/examples/universal)
 - [Server-side rendering with shared Redux store](/examples/universal-redux)
 
-
 ## Extensions
 
 - [Found Scroll](https://github.com/4Catalyzer/found-scroll) - Browser scroll management
 - [Found Named Routes](https://github.com/4Catalyzer/found-named-routes) - Named route support
 - [Found Relay](https://github.com/4Catalyzer/found-relay) - [Relay](https://relay.dev/) integration
+
+## Other
+
 - [spa-routing](https://github.com/4Catalyzer/spa-routing) - A set of helpers for creating reliable pathnames
