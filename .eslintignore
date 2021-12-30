@@ -1,8 +1,0 @@
-!.babelrc.js
-!.eslintrc.js
-
-**/coverage/
-**/lib/
-**/node_modules/
-**/examples/
-**/types/*.d.ts
