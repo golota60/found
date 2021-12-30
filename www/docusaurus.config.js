@@ -12,7 +12,7 @@ const config = {
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/f-logo-dark.svg',
   organizationName: '4Catalyzer', // Usually your GitHub org/user name.
   projectName: 'found', // Usually your repo name.
 
@@ -41,7 +41,7 @@ const config = {
         title: 'Found',
         logo: {
           alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          src: 'img/f-logo-empty.svg',
         },
         items: [
           {
