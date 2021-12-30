@@ -149,4 +149,4 @@ router.addNavigationListener(
 );
 ```
 
-The [navigation listener usage example](/examples/navigation-listener) demonstrates the use of navigation listeners in more detail, including the use of the `beforeUnload` option.
+The [navigation listener usage example](https://github.com/4Catalyzer/found/tree/master/examples/navigation-listener) demonstrates the use of navigation listeners in more detail, including the use of the `beforeUnload` option.

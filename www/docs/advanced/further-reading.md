@@ -6,14 +6,14 @@ sidebar_position: 10
 
 ## Examples
 
-- [Basic usage](/examples/basic)
-- [Basic usage with JSX route configuration](/examples/basic-jsx)
-- [Global pending state](/examples/global-pending)
-- [Navigation listener usage](/examples/navigation-listener)
-- [Shared Redux store](/examples/redux)
-- [Hot reloading](/examples/hot-reloading)
-- [Server-side rendering](/examples/universal)
-- [Server-side rendering with shared Redux store](/examples/universal-redux)
+- [Basic usage](https://github.com/4Catalyzer/found/tree/master/examples/basic)
+- [Basic usage with JSX route configuration](https://github.com/4Catalyzer/found/tree/master/examples/basic-jsx)
+- [Global pending state](https://github.com/4Catalyzer/found/tree/master/examples/global-pending)
+- [Navigation listener usage](https://github.com/4Catalyzer/found/tree/master/examples/navigation-listener)
+- [Shared Redux store](https://github.com/4Catalyzer/found/tree/master/examples/redux)
+- [Hot reloading](https://github.com/4Catalyzer/found/tree/master/examples/hot-reloading)
+- [Server-side rendering](https://github.com/4Catalyzer/found/tree/master/examples/universal)
+- [Server-side rendering with shared Redux store](https://github.com/4Catalyzer/found/tree/master/examples/universal-redux)
 
 ## Extensions
 

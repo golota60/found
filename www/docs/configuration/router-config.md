@@ -44,7 +44,7 @@ The `renderPending`, `renderReady`, `renderError`, and `render` functions receiv
   - `status`: the status code; this is the first argument to the `HttpError` constructor
   - `data`: additional error data; this is the second argument to the `HttpError` constructor
 
-You should specify a `renderError` function or otherwise handle error states. You can specify `renderPending` and `renderReady` functions to indicate loading state globally; the [global pending state example](/examples/global-pending) demonstrates doing this using a static container.
+You should specify a `renderError` function or otherwise handle error states. You can specify `renderPending` and `renderReady` functions to indicate loading state globally; the [global pending state example](https://github.com/4Catalyzer/found/tree/master/examples/global-pending) demonstrates doing this using a static container.
 
 The created `<BrowserRouter>` accepts an optional `matchContext` prop as described above that injects additional context into the route resolution methods.
 
