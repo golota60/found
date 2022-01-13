@@ -24,7 +24,7 @@ export default function createRender({
   renderPending,
   renderReady,
   renderError,
-}) {
+}: CreateRenderOptions) {
   return function render(renderArgs) {
     const { error, elements } = renderArgs;
     let element;
