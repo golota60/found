@@ -7,12 +7,19 @@ import Matcher from './Matcher';
 import createMatchEnhancer from './createMatchEnhancer';
 import foundReducer from './foundReducer';
 
+interface CreateFarceStoreProps {
+  historyProtocol: any;
+  historyMiddlewares: any;
+  historyOptions: any;
+  routeConfig: any;
+}
+
 export default function createFarceStore({
   historyProtocol,
   historyMiddlewares,
   historyOptions,
   routeConfig,
-}) {
+}: CreateFarceStoreProps) {
   const store = createStore(
     combineReducers({
       found: foundReducer,
