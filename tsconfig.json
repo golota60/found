@@ -1,0 +1,17 @@
+{
+  "extends": "@4c/tsconfig/base.json",
+  "compilerOptions": {
+    "declaration": true,
+    // "emitDeclarationOnly": false,
+    "declarationDir": "lib",
+    "allowJs": true,
+    "checkJs": false,
+    "jsx": "react",
+    "lib": ["es2017", "dom", "esnext.asynciterable"],
+    "esModuleInterop": true,
+    "typeRoots": ["global.d.ts"],
+    "noImplicitAny": false //TODO: change this to true/remove once most of lib is ported to ts
+  },
+  "include": ["src/**/*"],
+  "exclude": ["types"]
+}
