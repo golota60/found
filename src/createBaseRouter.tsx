@@ -9,7 +9,7 @@ import createRender from './createRender';
 import createStoreRouterObject from './createStoreRouterObject';
 import resolveRenderArgs from './resolveRenderArgs';
 
-export interface BaseRouterProps {
+export interface CreateBaseRouterProps {
   renderPending: any;
   renderReady: any;
   renderError: any;
@@ -38,7 +38,7 @@ function createBaseRouter({
     renderReady,
     renderError,
   }),
-}: BaseRouterProps): React.ComponentType<BaseRouterProps> {
+}: CreateBaseRouterProps): React.ComponentType<any> {
   class BaseRouter extends React.Component<any, BaseRouterState> {
     router: any;
     mounted: boolean;

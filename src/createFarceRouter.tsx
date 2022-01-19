@@ -9,6 +9,7 @@ import React, {
 
 import createBaseRouter from './createBaseRouter';
 import createFarceStore from './createFarceStore';
+import { FarceRouter, FarceRouterOptions } from './generics';
 
 export default function createFarceRouter({
   store: userStore,
@@ -16,10 +17,10 @@ export default function createFarceRouter({
   historyMiddlewares,
   historyOptions,
   routeConfig,
-  getFound = ({ found }) => found,
+  getFound = ({ found }: any) => found,
   ...options
-}) {
-  const Router = createBaseRouter(options);
+}: FarceRouterOptions): FarceRouter {
+  const Router = createBaseRouter(options as any);
 
   const store =
     userStore ||
@@ -60,5 +61,6 @@ export default function createFarceRouter({
     return <Router {...props} {...state} store={store} />;
   });
   FarceRouter.displayName = 'FarceRouter';
-  return FarceRouter;
+
+  return FarceRouter as FarceRouter;
 }
