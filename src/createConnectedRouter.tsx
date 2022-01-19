@@ -1,13 +1,15 @@
 import React from 'react';
 import { shallowEqual, useSelector, useStore } from 'react-redux';
 
-import createBaseRouter from './createBaseRouter';
+import createBaseRouter, { BaseRouterProps } from './createBaseRouter';
+import { ConnectedRouterOptions } from './createRender';
+import { BrowserRouter, BrowserRouterOptions } from './generics';
 
 export default function createConnectedRouter({
-  getFound = ({ found }) => found,
+  getFound = ({ found }: any) => found,
   ...options
-}) {
-  const Router = createBaseRouter(options);
+}: ConnectedRouterOptions): BrowserRouter {
+  const Router = createBaseRouter(options as BaseRouterProps);
 
   const getFoundState = (state) => {
     const { match, resolvedMatch } = getFound(state);

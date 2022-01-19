@@ -9,14 +9,14 @@ import createRender from './createRender';
 import createStoreRouterObject from './createStoreRouterObject';
 import resolveRenderArgs from './resolveRenderArgs';
 
-interface BaseRouterProps {
+export interface BaseRouterProps {
   renderPending: any;
   renderReady: any;
   renderError: any;
   render: any;
 }
 
-interface BaseRouterState {
+export interface BaseRouterState {
   isInitialRender: boolean;
   match: any;
   matchContext: any;

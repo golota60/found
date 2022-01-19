@@ -3,8 +3,9 @@ import React from 'react';
 
 import createFarceRouter from './createFarceRouter';
 import resolver from './resolver';
+import { BrowserRouter, BrowserRouterProps } from './generics';
 
-export default function createBrowserRouter(options) {
+export default function createBrowserRouter(options): BrowserRouter {
   const FarceRouter = createFarceRouter({
     ...options,
     historyProtocol: new BrowserProtocol(),
