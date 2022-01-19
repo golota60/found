@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { ElementsRendererType, ElementsRendererProps } from './generics';
 
 const propTypes = {
   elements: PropTypes.arrayOf(
@@ -26,7 +27,10 @@ function accumulateElement(children, element) {
     // Children come from named child routes.
     const groups = {};
     Object.entries(children).forEach(([groupName, groupElements]) => {
-      groups[groupName] = groupElements.reduceRight(accumulateElement, null);
+      groups[groupName] = (groupElements as any).reduceRight(
+        accumulateElement,
+        null,
+      );
     });
 
     return typeof element === 'function'
@@ -39,10 +43,10 @@ function accumulateElement(children, element) {
     : React.cloneElement(element, { children });
 }
 
-function ElementsRenderer({ elements }) {
+function ElementsRenderer({ elements }: ElementsRendererProps) {
   return elements.reduceRight(accumulateElement, null);
 }
 
-ElementsRenderer.propTypes = propTypes;
+(ElementsRenderer as any).propTypes = propTypes;
 
-export default ElementsRenderer;
+export default ElementsRenderer as ElementsRendererType;

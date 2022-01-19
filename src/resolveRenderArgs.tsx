@@ -1,21 +1,20 @@
 import HttpError from './HttpError';
 
 function foldElements(elementsRaw, routeIndices) {
-  const elements = [];
+  let elements: any[] = [];
 
   for (const routeIndex of routeIndices) {
     if (typeof routeIndex === 'object') {
       // Reshape the next elements in the elements array to match the nested
       // tree structure corresponding to the route groups.
-      const groupElements = {};
+      let groupElements = {};
       Object.entries(routeIndex).forEach(([groupName, groupRouteIndices]) => {
-        groupElements[groupName] = foldElements(
-          elementsRaw,
-          groupRouteIndices,
-        );
+        groupElements = {
+          ...groupElements,
+          [groupName]: foldElements(elementsRaw, groupRouteIndices),
+        };
       });
-
-      elements.push(groupElements);
+      elements = [...elements, groupElements];
     } else {
       // We intentionally modify elementsRaw, to make it easier to recursively
       // handle groups.
@@ -41,7 +40,7 @@ export default async function* resolveRenderArgs(
 
   if (!routes) {
     // Immediately render a "not found" error if no routes matched.
-    yield { ...augmentedMatch, error: new HttpError(404) };
+    yield { ...augmentedMatch, error: new HttpError(404, null) };
     return;
   }
 

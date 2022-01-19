@@ -9,6 +9,7 @@ import {
   isResolved,
 } from './ResolverUtils';
 import createElements from './createElements';
+import { Resolver } from './generics';
 
 function getRouteGetData(route) {
   return route.getData;
@@ -23,7 +24,7 @@ export default {
     const routeMatches = getRouteMatches(match);
 
     const Components = getComponents(routeMatches);
-    const data = this.getData(match, routeMatches);
+    const data = (this as any).getData(match, routeMatches);
 
     const earlyComponents = Components.some(isPromise)
       ? await Promise.all(Components.map(checkResolved))
@@ -91,4 +92,4 @@ export default {
       },
     ).map(({ routeData }) => routeData);
   },
-};
+} as Resolver;

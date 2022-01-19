@@ -35,7 +35,6 @@ export default function createElements(routeMatches, Components, matchData) {
       warning(
         data === undefined,
         'Route %s with data has no render method or component.',
-        i,
       );
 
       // Nothing to render.

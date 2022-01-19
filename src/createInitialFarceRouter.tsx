@@ -1,5 +1,6 @@
 import createFarceRouter from './createFarceRouter';
 import createFarceStore from './createFarceStore';
+import { InitialFarceRouterOptions, FarceRouter } from './generics';
 import getStoreRenderArgs from './getStoreRenderArgs';
 
 export default async function createInitialFarceRouter({
@@ -10,7 +11,7 @@ export default async function createInitialFarceRouter({
   matchContext,
   resolver,
   ...options
-}) {
+}: InitialFarceRouterOptions): Promise<FarceRouter> {
   const store = createFarceStore({
     historyProtocol,
     historyMiddlewares,
@@ -18,7 +19,7 @@ export default async function createInitialFarceRouter({
     routeConfig,
   });
 
-  const FarceRouter = createFarceRouter({ ...options, store });
+  const FarceRouter = createFarceRouter({ ...options, store } as any);
 
   // This intentionally doesn't handle RedirectExceptions, because those
   // shouldn't happen here anyway.

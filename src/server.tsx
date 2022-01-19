@@ -9,6 +9,7 @@ import createFarceStore from './createFarceStore';
 import createRender from './createRender';
 import getStoreRenderArgs from './getStoreRenderArgs';
 import defaultResolver from './resolver';
+import RedirectException from './RedirectException';
 
 const propTypes = {
   renderArgs: PropTypes.shape({
@@ -69,13 +70,13 @@ export async function getFarceResult({
       resolver,
     });
   } catch (e) {
-    if (e.isFoundRedirectException) {
+    if ((e as RedirectException).isFoundRedirectException) {
       // The store is not exposed to the user, so we need to build the redirect
       // URL here.
       return {
-        status: e.status,
+        status: (e as RedirectException).status,
         redirect: {
-          url: store.farce.createHref(e.location),
+          url: store.farce.createHref((e as RedirectException).location),
         },
       };
     }

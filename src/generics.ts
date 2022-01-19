@@ -133,6 +133,7 @@ export type ISACTIVE = (
 //     options?: IsActiveOptions,
 //   ) => boolean;
 
+
 //   /**
 //    * Returns the path string for a pattern of the same format as a route path
 //    * and a object of the corresponding path parameters
@@ -363,7 +364,7 @@ export type LinkProps<
   | LinkPropsWithActivePropName<TInnerWithActivePropName, TActivePropName>
   | LinkPropsWithFunctionChild;
 
-export interface Link<
+export interface LinkType<
   TInner extends React.ElementType = never,
   TInnerWithActivePropName extends React.ComponentType<
     LinkInjectedProps & { [activePropName in TActivePropName]: boolean }
@@ -488,7 +489,7 @@ export interface ElementsRendererProps {
   elements: RenderArgsElements;
 }
 
-export type ElementsRenderer = React.ComponentType<ElementsRendererProps>;
+export type ElementsRendererType = React.ComponentType<ElementsRendererProps>;
 
 export interface GetStoreRenderArgsOptions {
   store: Store;

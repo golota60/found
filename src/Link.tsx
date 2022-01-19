@@ -1,6 +1,7 @@
 import useEventCallback from '@restart/hooks/useEventCallback';
 import React from 'react';
 import warning from 'tiny-warning';
+import { LinkProps, LinkPropsWithAs, LinkType } from './generics';
 
 import useRouter from './useRouter';
 
@@ -16,7 +17,7 @@ function Link({
   onClick,
   target,
   ...props
-}) {
+}: LinkPropsWithAs<any>): LinkType {
   const { router, match } = useRouter() || {
     match: propsMatch,
     router: propsRouter,
@@ -61,9 +62,6 @@ function Link({
       warning(
         false,
         'Link to %s with `%s` prop `%s` has an element type that is not a component. The expected prop for the link component is `as`.',
-        JSON.stringify(to),
-        wrongPropName,
-        wrongPropValue.displayName || wrongPropValue.name || 'UNKNOWN',
       );
     }
   }
@@ -76,7 +74,8 @@ function Link({
     const active = router.isActive(match, toLocation, { exact });
 
     if (childrenIsFunction) {
-      return props.children({ href, active, onClick: handleClick });
+      // This is the only as any that i should preserve afaik -delete this after typescript port
+      return (props as any).children({ href, active, onClick: handleClick });
     }
 
     if (active) {
@@ -102,7 +101,7 @@ function Link({
       href={href}
       onClick={handleClick} // This overrides props.onClick.
     />
-  );
+  ) as any;
 }
 
 export default Link;

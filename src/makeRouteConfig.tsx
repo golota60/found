@@ -1,4 +1,6 @@
 import React from 'react';
+import warning from 'tiny-warning';
+import { RouteConfig } from './generics';
 
 function buildRouteConfig(node, routeConfig) {
   React.Children.forEach(node, (child) => {
@@ -13,7 +15,7 @@ function buildRouteConfig(node, routeConfig) {
     }
 
     let Type = child.type;
-    const { children, ...props } = child.props;
+    const { children, ...props } = child.props as any;
 
     if (Type === React.Fragment) {
       buildRouteConfig(children, routeConfig);
@@ -21,13 +23,21 @@ function buildRouteConfig(node, routeConfig) {
     }
 
     if (__DEV__) {
-      if (Type.prototype.constructor !== Type) {
+      warning(
+        typeof Type === 'string',
+        `\`${child}\` is a string, this is a devtools warning`,
+      );
+      if (
+        (Type as React.JSXElementConstructor<any>).prototype.constructor !==
+        Type
+      ) {
         // Unwrap proxies from react-proxy. This isn't strictly necessary.
         // eslint-disable-next-line no-param-reassign
-        Type = Type.prototype.constructor;
+        Type = (Type as React.JSXElementConstructor<any>).prototype
+          .constructor;
       } else if (
         // eslint-disable-next-line no-underscore-dangle
-        Type.__reactstandin__getCurrent
+        (Type as any).__reactstandin__getCurrent
       ) {
         // Unwrap proxies from react-stand-in.
         // eslint-disable-next-line no-param-reassign
@@ -35,7 +45,7 @@ function buildRouteConfig(node, routeConfig) {
       }
     }
 
-    const route = new Type(props);
+    const route = new (Type as any)(props);
 
     if (children) {
       if (React.isValidElement(children) || Array.isArray(children)) {
@@ -45,7 +55,7 @@ function buildRouteConfig(node, routeConfig) {
         const routeGroups = {};
         Object.entries(children).forEach(([groupName, groupRoutes]) => {
           // eslint-disable-next-line no-use-before-define
-          routeGroups[groupName] = makeRouteConfig(groupRoutes);
+          routeGroups[groupName] = makeRouteConfig(groupRoutes as any);
         });
 
         route.children = routeGroups;
@@ -61,6 +71,6 @@ function buildRouteConfig(node, routeConfig) {
 /**
  * Create a route configuration from JSX configuration elements.
  */
-export default function makeRouteConfig(node) {
+export default function makeRouteConfig(node: React.ReactNode): RouteConfig {
   return buildRouteConfig(node, []);
 }

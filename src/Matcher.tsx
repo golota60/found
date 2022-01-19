@@ -1,14 +1,23 @@
 import { dequal } from 'dequal';
 import warning from 'tiny-warning';
+import {
+  IsActiveOptions,
+  LocationDescriptorObject,
+  Match,
+  MatchBase,
+  ParamsDescriptor,
+  RouteConfig,
+} from './generics';
 
 import pathToRegexp from './pathToRegexp';
 
 export default class Matcher {
-  constructor(routeConfig) {
+  routeConfig: RouteConfig;
+  constructor(routeConfig: RouteConfig) {
     this.routeConfig = routeConfig;
   }
 
-  match({ pathname }) {
+  match({ pathname }: Location) {
     const matches = this.matchRoutes(this.routeConfig, pathname);
     if (!matches) {
       return null;
@@ -17,7 +26,7 @@ export default class Matcher {
     return this.makePayload(matches);
   }
 
-  getRoutes({ routeIndices }) {
+  getRoutes({ routeIndices }: MatchBase) {
     if (!routeIndices) {
       return null;
     }
@@ -38,7 +47,11 @@ export default class Matcher {
     return `${basePath}${this.getCanonicalPattern(path)}`;
   }
 
-  isActive({ location: matchLocation }, location, { exact = false } = {}) {
+  isActive(
+    { location: matchLocation }: Match,
+    location: LocationDescriptorObject,
+    { exact = false }: IsActiveOptions = {},
+  ): boolean {
     return (
       this.isPathnameActive(
         matchLocation.pathname,
@@ -48,7 +61,7 @@ export default class Matcher {
     );
   }
 
-  format(pattern, params) {
+  format(pattern: string, params: ParamsDescriptor): string {
     return pathToRegexp.compile(pattern)(params);
   }
 
@@ -104,10 +117,10 @@ export default class Matcher {
       return null;
     }
 
-    const params = {};
+    let params = {};
     keys.forEach(({ name }, index) => {
       const value = match[index + 1];
-      params[name] = value && decodeURIComponent(value);
+      params = { ...params, [name]: value && decodeURIComponent(value) };
     });
 
     return {
@@ -141,12 +154,13 @@ export default class Matcher {
     if (routeMatch.groups) {
       warning(
         matches.length === 1,
-        'Route match with groups %s has children, which are ignored.',
-        Object.keys(routeMatch.groups).join(', '),
+        'Route match with groups %s has children, which are ignored.' +
+          '\n' +
+          Object.keys(routeMatch.groups).join(', '),
       );
 
       const groupRouteIndices = {};
-      const routeParams = [];
+      let routeParams: any[] = [];
       const params = {};
 
       Object.entries(routeMatch.groups).forEach(
@@ -159,7 +173,7 @@ export default class Matcher {
 
           // Flatten route groups for route params matching getRoutesFromIndices
           // below.
-          routeParams.push(...groupPayload.routeParams);
+          routeParams = [...routeParams, ...groupPayload.routeParams];
 
           // Just merge all the params depth-first; it's the easiest option.
           Object.assign(params, groupPayload.params);
@@ -197,14 +211,15 @@ export default class Matcher {
     if (typeof routeIndex === 'object') {
       // Flatten route groups to save resolvers from having to explicitly
       // handle them.
-      const groupRoutes = [];
+      let groupRoutes: any[] = [];
       Object.entries(routeIndex).forEach(([groupName, groupRouteIndices]) => {
-        groupRoutes.push(
+        groupRoutes = [
+          ...groupRoutes,
           ...this.getRoutesFromIndices(
             groupRouteIndices,
             routeConfigOrGroups[groupName],
           ),
-        );
+        ];
       });
 
       return groupRoutes;

@@ -8,6 +8,7 @@ import StaticContainer from './StaticContainer';
 import createRender from './createRender';
 import createStoreRouterObject from './createStoreRouterObject';
 import resolveRenderArgs from './resolveRenderArgs';
+import RedirectException from './RedirectException';
 
 export interface CreateBaseRouterProps {
   renderPending: any;
@@ -191,7 +192,7 @@ function createBaseRouter({
           return;
         }
 
-        if ((e as any).isFoundRedirectException) {
+        if ((e as RedirectException).isFoundRedirectException) {
           this.router.replace((e as any).location);
           return;
         }

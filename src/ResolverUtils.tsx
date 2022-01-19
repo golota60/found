@@ -27,21 +27,22 @@ function accumulateRouteValuesImpl(
   callback,
   initialValue,
 ) {
-  const accumulated = [];
+  let accumulated: any[] = [];
   let value = initialValue;
 
   for (const routeIndex of routeIndices) {
     if (typeof routeIndex === 'object') {
       // eslint-disable-next-line no-loop-func
       Object.values(routeIndex).forEach((groupRouteIndices) => {
-        accumulated.push(
+        accumulated = [
+          ...accumulated,
           ...accumulateRouteValuesImpl(
             routeValues,
             groupRouteIndices,
             callback,
             value,
           ),
-        );
+        ];
       });
     } else {
       value = callback(value, routeValues.shift());
@@ -95,8 +96,8 @@ function getRouteComponent(route) {
   if (__DEV__ && route.component) {
     warning(
       route.Component,
-      'Route with `component` property `%s` has no `Component` property. The expected property for the route component is `Component`.',
-      route.component.displayName || route.component.name,
+      'Route with `component` property `%s` has no `Component` property. The expected property for the route component is `Component`.' +
+        route.component.displayName || route.component.name,
     );
   }
 

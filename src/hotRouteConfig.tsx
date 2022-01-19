@@ -1,4 +1,6 @@
-export default function hotRouteConfig(routeConfig) {
+import { RouteConfig } from './generics';
+
+export default function hotRouteConfig(routeConfig: RouteConfig): RouteConfig {
   if (__DEV__ && typeof window !== 'undefined') {
     /* eslint-env browser */
     /* eslint-disable no-underscore-dangle */

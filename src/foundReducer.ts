@@ -3,7 +3,7 @@ import ActionTypes from './ActionTypes';
 import { FoundState } from './generics';
 
 export default function foundReducer(
-  state = null,
+  state: any = null,
   action: AnyAction,
 ): Reducer<FoundState> {
   const { type, payload } = action;

@@ -2,6 +2,7 @@ import FarceActionTypes from 'farce/ActionTypes';
 import { applyMiddleware } from 'redux';
 
 import ActionTypes from './ActionTypes';
+import Matcher from './Matcher';
 
 function createMatchMiddleware(matcher) {
   return function matchMiddleware() {
@@ -23,7 +24,7 @@ function createMatchMiddleware(matcher) {
 }
 
 export default function createMatchEnhancer(
-  matcher,
+  matcher: Matcher,
   getFound = ({ found }) => found,
 ) {
   return function matchEnhancer(createStore) {
@@ -32,7 +33,7 @@ export default function createMatchEnhancer(
         createMatchMiddleware(matcher),
       );
 
-      const store = middlewareEnhancer(createStore)(...args);
+      const store = middlewareEnhancer(createStore)(args as any);
 
       function replaceRouteConfig(routeConfig) {
         matcher.replaceRouteConfig(routeConfig);
